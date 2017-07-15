@@ -21,6 +21,11 @@ class PhotoImageView: UIImageView {
             task.cancel()
         }
         
+        
+        // TODO: load image from cache
+        //
+        
+        
         // save the lastes url request
         self.url = url
         
@@ -34,6 +39,11 @@ class PhotoImageView: UIImageView {
             guard let image = fileUrl.flatMap({ try? Data(contentsOf: $0) }).flatMap({ UIImage(data: $0) }) else {
                 return
             }
+        
+            
+            // TODO: save image to cache
+            //
+            
             
             // update image
             DispatchQueue.main.async {
