@@ -111,14 +111,14 @@
 			isa = PBXGroup;
 			children = (
 				1D394A4C1F19E812001ECDD6 /* AppDelegate.swift */,
+				1D394A601F19FCFB001ECDD6 /* Data+Extensions.swift */,
 				1D394A5C1F19FBBD001ECDD6 /* FlickrFetchManager.swift */,
 				1D394A5D1F19FBBD001ECDD6 /* FlickrPhoto.swift */,
 				1D394A521F19E90D001ECDD6 /* FlickrViewController.swift */,
-				1D394A541F19ED81001ECDD6 /* SearchKeywordCell.swift */,
-				1D394A561F19F18E001ECDD6 /* SearchHistoryManager.swift */,
-				1D394A601F19FCFB001ECDD6 /* Data+Extensions.swift */,
 				1D394A641F1A121F001ECDD6 /* PhotoCell.swift */,
 				1D394A661F1A12F2001ECDD6 /* PhotoImageView.swift */,
+				1D394A541F19ED81001ECDD6 /* SearchKeywordCell.swift */,
+				1D394A561F19F18E001ECDD6 /* SearchHistoryManager.swift */,
 			);
 			name = Sources;
 			sourceTree = "<group>";

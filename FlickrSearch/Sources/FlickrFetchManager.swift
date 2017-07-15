@@ -29,17 +29,22 @@ class FlickrFetchManager {
     // keyword
     open var keyword: String = ""
 
-    
+    // current loaded page
     fileprivate var page: Int = 0
     
+    // fetching page
     fileprivate var fetchingPage: Int = 0
 
+    // total number of page
     fileprivate var numberOfPage: Int = 0
     
+    // photos
     fileprivate var photos: Array<FlickrPhoto> = []
     
+    // number of photos per page
     fileprivate var numberOfPhotosPerPage: Int = 100
     
+    // data task
     fileprivate var task: URLSessionDataTask?
     
     
@@ -48,6 +53,7 @@ class FlickrFetchManager {
     }
     
     
+    // fetch photos via keyword
     open func fetch(keyword: String) -> Bool {
         if self.keyword != keyword {
             self.reset()
