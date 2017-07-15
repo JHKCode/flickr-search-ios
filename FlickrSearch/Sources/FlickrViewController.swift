@@ -10,9 +10,15 @@ import UIKit
 
 class FlickrViewController: UIViewController {
 
+    @IBOutlet weak var searchBar: UISearchBar!
+    
     @IBOutlet weak var keywordTableView: UITableView!
     
+    @IBOutlet weak var photoCollectionView: UICollectionView!
+    
     fileprivate var searchHistoryManager = SearchHistoryManager()
+    
+    fileprivate var fetchManager = FlickrFetchManager()
     
     
     override func viewDidLoad() {
@@ -52,7 +58,7 @@ extension FlickrViewController: UISearchBarDelegate {
             return
         }
         
-        self.searchHistoryManager.addKeyword(keyword)
+        self.search(keyword)
         
         searchBar.resignFirstResponder()
     }
@@ -93,9 +99,41 @@ extension FlickrViewController: UITableViewDataSource {
 extension FlickrViewController: UITableViewDelegate {
     
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let keyword = (tableView.cellForRow(at: indexPath) as? SearchKeywordCell)?.keyword {
-            //self.searchFlickr(withKeyword: keyword)
+        if let keyword = (tableView.cellForRow(at: indexPath) as? SearchKeywordCell)?.keyword, keyword.isEmpty == false {
+            self.search(keyword)
         }
     }
 
+}
+
+
+// MARK: UICollectionViewDataSource
+
+
+extension FlickrViewController: UICollectionViewDataSource {
+    
+    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 0
+    }
+    
+    
+    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        return UICollectionViewCell(frame: .zero)
+    }
+
+}
+
+
+// MARK: Private Method
+
+
+extension FlickrViewController {
+    
+    func search(_ keyword: String) {
+        self.searchBar.resignFirstResponder()
+        self.keywordTableView.isHidden = true
+        self.searchHistoryManager.addKeyword(keyword)
+        _ = self.fetchManager.fetch(keyword: keyword)
+    }
+    
 }
