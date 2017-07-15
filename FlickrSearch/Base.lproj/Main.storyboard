@@ -48,24 +48,39 @@
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="kz6-Sb-o4m">
                                 <rect key="frame" x="0.0" y="108" width="375" height="559"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="oKK-Ej-YF0">
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="1" minimumInteritemSpacing="1" id="oKK-Ej-YF0">
                                     <size key="itemSize" width="50" height="50"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="UyP-7d-XGY">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="PhotoCell" id="UyP-7d-XGY" customClass="PhotoCell" customModule="FlickrSearch" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                             <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="5dL-vZ-dRP" customClass="PhotoImageView" customModule="FlickrSearch" customModuleProvider="target">
+                                                    <rect key="frame" x="0.0" y="8" width="50" height="34"/>
+                                                </imageView>
+                                            </subviews>
                                         </view>
+                                        <constraints>
+                                            <constraint firstItem="5dL-vZ-dRP" firstAttribute="leading" secondItem="UyP-7d-XGY" secondAttribute="leading" id="84t-az-72O"/>
+                                            <constraint firstAttribute="bottomMargin" secondItem="5dL-vZ-dRP" secondAttribute="bottom" id="C6c-kg-ORS"/>
+                                            <constraint firstItem="5dL-vZ-dRP" firstAttribute="top" secondItem="UyP-7d-XGY" secondAttribute="topMargin" id="LdK-MQ-uJo"/>
+                                            <constraint firstAttribute="trailing" secondItem="5dL-vZ-dRP" secondAttribute="trailing" id="jhj-f4-74j"/>
+                                        </constraints>
+                                        <connections>
+                                            <outlet property="imageView" destination="5dL-vZ-dRP" id="pPA-aM-nTc"/>
+                                        </connections>
                                     </collectionViewCell>
                                 </cells>
                                 <connections>
                                     <outlet property="dataSource" destination="awi-FQ-P0P" id="pep-a4-4uf"/>
+                                    <outlet property="delegate" destination="awi-FQ-P0P" id="nco-5c-yhw"/>
                                 </connections>
                             </collectionView>
                             <tableView hidden="YES" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="bL8-kN-5tX">
@@ -122,6 +137,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="OAj-O4-aoh"/>
                     <connections>
+                        <outlet property="keyboardTableViewBottomConstraint" destination="Fgz-T8-gFd" id="L0D-J0-t8r"/>
                         <outlet property="keywordTableView" destination="bL8-kN-5tX" id="xQ6-eJ-n83"/>
                         <outlet property="photoCollectionView" destination="kz6-Sb-o4m" id="4Zr-Xx-G72"/>
                         <outlet property="searchBar" destination="dml-mS-o0o" id="qRy-Ia-Vvj"/>

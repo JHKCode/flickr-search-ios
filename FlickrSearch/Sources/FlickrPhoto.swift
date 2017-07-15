@@ -29,4 +29,7 @@ struct FlickrPhoto {
     
     public let isFamily: Bool
     
+    public var url: URL? {
+        return URL(string: "https://farm\(farm).static.flickr.com/\(server)/\(id)_\(secret).jpg")
+    }
 }

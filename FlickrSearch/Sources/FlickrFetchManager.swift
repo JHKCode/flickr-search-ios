@@ -25,16 +25,21 @@ class FlickrFetchManager {
     // delegate
     open weak var delegate: FlickrFetchManagerDelegate?
     
+    // keyword
+    open var keyword: String = ""
+
     
-    fileprivate var page: Int = 1
+    fileprivate var page: Int = 0
+    
+    fileprivate var fetchingPage: Int = 0
+
+    fileprivate var numberOfPage: Int = 0
+    
+    fileprivate var photos: Array<FlickrPhoto> = []
     
     fileprivate var numberOfPhotosPerPage: Int = 100
     
     fileprivate var task: URLSessionDataTask?
-    
-    fileprivate var keyword: String = ""
-    
-    fileprivate var fetchResult: FlickrFetchResult?
     
     
     init(withNumberOfPhotosPerPage numberOfPhotos: Int = 100) {
@@ -43,17 +48,30 @@ class FlickrFetchManager {
     
     
     open func fetch(keyword: String) -> Bool {
-        if let curTask = self.task {
-            curTask.cancel()
+        if self.keyword != keyword {
+            self.reset()
+            self.keyword = keyword
         }
         
-        guard let url = URL(string: FlickrFetchManager.searchURLString + keyword) else {
+        // no more page remains
+        if self.numberOfPage > 0 && self.page == self.numberOfPage {
             return false
         }
         
-        // save last keyword
-        self.keyword = keyword
+        // check if fetching is on going
+        if self.fetchingPage > self.page {
+            return false
+        }
+
+        // generate url
+        guard let url = URL(string: FlickrFetchManager.searchURLString + keyword + "&page=\(self.page + 1)&per_page=\(self.numberOfPhotosPerPage)") else {
+            return false
+        }
         
+        // save current fetching page
+        self.fetchingPage = self.page + 1
+        
+        // fetch photos
         self.task = URLSession.shared.dataTask(with: url, completionHandler: { (data: Data?, response: URLResponse?, error: Error?) in
             if let err = error {
                 print("fetch error: \(err)")
@@ -66,11 +84,12 @@ class FlickrFetchManager {
                 return
             }
             
-            // make fetch result model
-            self.fetchResult = self.processFetchResult(data)
-            
-            // notify
-            self.delegate?.fetchManagerDidFetchCompleted(self)
+            // process fetched data
+            if self.processFetchResult(data) == true {
+                self.delegate?.fetchManagerDidFetchCompleted(self)
+            } else {
+                self.delegate?.fetchManager(self, didFailWithError: nil)
+            }
         })
         
         
@@ -82,51 +101,72 @@ class FlickrFetchManager {
         
         return true
     }
+
+    
+    open func photoCount() -> Int {
+        return self.photos.count
+    }
     
     
-    open func fetchNext() {
-        
+    open func photo(at indexPath: IndexPath) -> FlickrPhoto? {
+        return self.photos[indexPath.row]
     }
     
 }
 
 
+// MARK: Process Fetch Result
+
+
 extension FlickrFetchManager {
 
-    fileprivate func processFetchResult(_ data: Data?) -> FlickrFetchResult? {
+    // process fetch result
+    fileprivate func processFetchResult(_ data: Data?) -> Bool {
         guard let json = data?.jsonDictonary() else {
-            return nil
+            return false
         }
         
         // stat
-        guard let stat = json["stat"] as? String else {
-            return nil
+        guard let stat = json["stat"] as? String, stat == "ok" else {
+            return false
         }
         
         // photos
         guard let photos = json["photos"] as? Dictionary<String, Any> else {
-            return nil
+            return false
         }
         
         // total pages
         guard let totalPages = photos["pages"] as? Int else {
-            return nil
+            return false
+        }
+        
+        // current page
+        guard let page = photos["page"] as? Int else {
+            return false
         }
         
         // total photos
+        /*
         guard let totalPhotos = (photos["total"] as? String).flatMap({ Int($0) })  else {
             return nil
         }
+         */
         
         // photo
         guard let photo = photos["photo"] as? Array<Dictionary<String, Any>> else {
-            return nil
+            return false
         }
 
-        return FlickrFetchResult(stat: stat, totalPages: totalPages, totalPhotos: totalPhotos, photos: self.processPhoto(photo))
+        self.page = page
+        self.numberOfPage = totalPages
+        self.photos.append(contentsOf: self.processPhoto(photo))
+        
+        return true
     }
     
     
+    // process fetched photos info
     fileprivate func processPhoto(_ photos: Array<Dictionary<String, Any>>) -> Array<FlickrPhoto> {
         var flickrPhotos = Array<FlickrPhoto>()
         
@@ -171,6 +211,24 @@ extension FlickrFetchManager {
         }
         
         return flickrPhotos
+    }
+    
+}
+
+
+// MARK: Reset
+
+
+extension FlickrFetchManager {
+    
+    func reset() {
+        self.task?.cancel()
+        
+        self.keyword = ""
+        self.page = 0
+        self.fetchingPage = 0
+        self.numberOfPage = 0
+        self.photos.removeAll()
     }
     
 }

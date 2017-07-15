@@ -27,6 +27,10 @@ class SearchHistoryManager {
     
     
     open func addKeyword(_ keyword: String) {
+        if let index = self.keywords.index(of: keyword) {
+            self.keywords.remove(at: index)
+        }
+        
         self.keywords.insert(keyword, at: 0)
         
         UserDefaults.standard.setValue(self.keywords, forKey: SearchHistoryManager.flickrSearchKeywordsKey)

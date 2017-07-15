@@ -16,17 +16,29 @@ class FlickrViewController: UIViewController {
     
     @IBOutlet weak var photoCollectionView: UICollectionView!
     
+    @IBOutlet weak var keyboardTableViewBottomConstraint: NSLayoutConstraint!
+    
     fileprivate var searchHistoryManager = SearchHistoryManager()
     
     fileprivate var fetchManager = FlickrFetchManager()
+    
+    open var column: Int = 3
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.title = "Flickr"
+        self.fetchManager.delegate = self
     }
 
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        
+        self.layoutCollectionView()
+    }
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -100,6 +112,7 @@ extension FlickrViewController: UITableViewDelegate {
     
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let keyword = (tableView.cellForRow(at: indexPath) as? SearchKeywordCell)?.keyword, keyword.isEmpty == false {
+            self.searchBar.text = keyword
             self.search(keyword)
         }
     }
@@ -113,14 +126,48 @@ extension FlickrViewController: UITableViewDelegate {
 extension FlickrViewController: UICollectionViewDataSource {
     
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 0
+        return self.fetchManager.photoCount()
     }
     
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        return UICollectionViewCell(frame: .zero)
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotoCell", for: indexPath) as? PhotoCell else {
+            return UICollectionViewCell(frame: .zero)
+        }
+        
+        // load photo image
+        if let photo = self.fetchManager.photo(at: indexPath), let url = photo.url {
+            cell.loadImage(withURL: url)
+        }
+        
+        // fetch next page
+        if indexPath.row + 1 == self.fetchManager.photoCount() {
+            _ = self.fetchManager.fetch(keyword: self.fetchManager.keyword)
+        }
+        
+        return cell
     }
 
+}
+
+
+// MARK: FlickrFetchManagerDelegate
+
+
+extension FlickrViewController: FlickrFetchManagerDelegate {
+    
+    func fetchManagerDidFetchCompleted(_: FlickrFetchManager) {
+        DispatchQueue.main.async {
+            self.photoCollectionView.setContentOffset(.zero, animated: true)
+            self.photoCollectionView.reloadData()
+        }
+    }
+    
+    
+    func fetchManager(_: FlickrFetchManager, didFailWithError error: Error?) {
+        print("fetch error: \(String(describing: error))")
+    }
+    
 }
 
 
@@ -128,6 +175,28 @@ extension FlickrViewController: UICollectionViewDataSource {
 
 
 extension FlickrViewController {
+    
+    func setupNotification() {
+        NotificationCenter.default.addObserver(forName: NSNotification.Name.UIKeyboardDidChangeFrame, object: nil, queue: nil) { [weak self] (notification) in
+            guard let frame = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
+                return
+            }
+            
+            self?.keyboardTableViewBottomConstraint.constant = frame.size.height
+        }
+    }
+    
+    
+    func layoutCollectionView() {
+        // reset collection view cell size
+        if let flowLayout = self.photoCollectionView.collectionViewLayout as? UICollectionViewFlowLayout {
+            let viewSize = self.view.bounds.size
+            let width = (viewSize.width / CGFloat(self.column)) - (flowLayout.minimumInteritemSpacing * CGFloat(self.column - 1))
+            
+            flowLayout.itemSize = CGSize(width: width, height: width)
+        }
+    }
+    
     
     func search(_ keyword: String) {
         self.searchBar.resignFirstResponder()
