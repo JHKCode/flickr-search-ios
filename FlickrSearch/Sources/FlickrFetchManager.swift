@@ -18,6 +18,7 @@ protocol FlickrFetchManagerDelegate: class {
 }
 
 
+/// fetch photo information by search from keyword
 class FlickrFetchManager {
     
     static fileprivate let searchURLString = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=3e7cc266ae2b0e0d78e279ce8e361736&format=json&nojsoncallback=1&safe_search=1&text="
@@ -103,11 +104,13 @@ class FlickrFetchManager {
     }
 
     
+    // total photo count
     open func photoCount() -> Int {
         return self.photos.count
     }
     
     
+    // photo information at index path
     open func photo(at indexPath: IndexPath) -> FlickrPhoto? {
         return self.photos[indexPath.row]
     }

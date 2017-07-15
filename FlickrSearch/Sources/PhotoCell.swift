@@ -13,6 +13,7 @@ class PhotoCell: UICollectionViewCell {
     @IBOutlet weak var imageView: PhotoImageView!
     
     
+    // reset image view
     override func prepareForReuse() {
         self.imageView.canel()
         self.imageView.image = nil
@@ -26,6 +27,7 @@ class PhotoCell: UICollectionViewCell {
     }
     
     
+    // load image from url
     open func loadImage(withURL url: URL) {
         self.imageView.loadImage(withURL: url)
     }

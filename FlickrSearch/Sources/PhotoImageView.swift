@@ -15,6 +15,7 @@ class PhotoImageView: UIImageView {
     var task: URLSessionDownloadTask?
     
     
+    // load image from url
     open func loadImage(withURL url: URL) {
         if let task = self.task {
             task.cancel()
@@ -24,14 +25,17 @@ class PhotoImageView: UIImageView {
         self.url = url
         
         self.task = URLSession.shared.downloadTask(with: url, completionHandler: { (fileUrl: URL?, response: URLResponse?, error: Error?) in
+            // skip image because new url is requested
             if self.url != url {
                 return
             }
             
+            // load image from url
             guard let image = fileUrl.flatMap({ try? Data(contentsOf: $0) }).flatMap({ UIImage(data: $0) }) else {
                 return
             }
             
+            // update image
             DispatchQueue.main.async {
                 self.image = image
             }
@@ -41,6 +45,7 @@ class PhotoImageView: UIImageView {
     }
 
     
+    // cancel request
     open func canel() {
         self.task?.cancel()
         self.url = nil

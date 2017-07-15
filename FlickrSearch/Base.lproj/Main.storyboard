@@ -119,6 +119,9 @@
                                     <outlet property="delegate" destination="awi-FQ-P0P" id="v8p-Xg-Ehr"/>
                                 </connections>
                             </tableView>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="Lwe-wg-ocP">
+                                <rect key="frame" x="178" y="324" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -128,7 +131,9 @@
                             <constraint firstItem="bL8-kN-5tX" firstAttribute="top" secondItem="dml-mS-o0o" secondAttribute="bottom" id="JWG-Sk-MYh"/>
                             <constraint firstItem="NxU-vc-ZHl" firstAttribute="top" secondItem="kz6-Sb-o4m" secondAttribute="bottom" id="Q3m-oW-pFE"/>
                             <constraint firstItem="dml-mS-o0o" firstAttribute="top" secondItem="UdX-zQ-ChA" secondAttribute="bottom" id="UyX-b5-FoN"/>
+                            <constraint firstItem="Lwe-wg-ocP" firstAttribute="centerX" secondItem="yFM-NL-5jC" secondAttribute="centerX" id="ctN-Fs-EPE"/>
                             <constraint firstItem="bL8-kN-5tX" firstAttribute="leading" secondItem="yFM-NL-5jC" secondAttribute="leading" id="eRE-Nq-zvw"/>
+                            <constraint firstItem="Lwe-wg-ocP" firstAttribute="centerY" secondItem="yFM-NL-5jC" secondAttribute="centerY" id="oQL-Zw-nvp"/>
                             <constraint firstAttribute="trailing" secondItem="dml-mS-o0o" secondAttribute="trailing" id="uVd-ut-0Hq"/>
                             <constraint firstItem="kz6-Sb-o4m" firstAttribute="leading" secondItem="yFM-NL-5jC" secondAttribute="leading" id="wC7-4k-4Ue"/>
                             <constraint firstAttribute="trailing" secondItem="bL8-kN-5tX" secondAttribute="trailing" id="x8P-ua-QOn"/>
@@ -137,6 +142,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="OAj-O4-aoh"/>
                     <connections>
+                        <outlet property="activityIndicator" destination="Lwe-wg-ocP" id="Pdq-D7-v1b"/>
                         <outlet property="keyboardTableViewBottomConstraint" destination="Fgz-T8-gFd" id="L0D-J0-t8r"/>
                         <outlet property="keywordTableView" destination="bL8-kN-5tX" id="xQ6-eJ-n83"/>
                         <outlet property="photoCollectionView" destination="kz6-Sb-o4m" id="4Zr-Xx-G72"/>

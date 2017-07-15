@@ -18,6 +18,9 @@ class FlickrViewController: UIViewController {
     
     @IBOutlet weak var keyboardTableViewBottomConstraint: NSLayoutConstraint!
     
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    
+    
     fileprivate var searchHistoryManager = SearchHistoryManager()
     
     fileprivate var fetchManager = FlickrFetchManager()
@@ -30,6 +33,8 @@ class FlickrViewController: UIViewController {
         
         self.title = "Flickr"
         self.fetchManager.delegate = self
+        
+        self.setupNotification()
     }
 
     
@@ -70,6 +75,7 @@ extension FlickrViewController: UISearchBarDelegate {
             return
         }
         
+        // start search
         self.search(keyword)
         
         searchBar.resignFirstResponder()
@@ -108,11 +114,11 @@ extension FlickrViewController: UITableViewDataSource {
 
 // MARK: UITableViewDelegate
 
+
 extension FlickrViewController: UITableViewDelegate {
     
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let keyword = (tableView.cellForRow(at: indexPath) as? SearchKeywordCell)?.keyword, keyword.isEmpty == false {
-            self.searchBar.text = keyword
             self.search(keyword)
         }
     }
@@ -140,7 +146,8 @@ extension FlickrViewController: UICollectionViewDataSource {
             cell.loadImage(withURL: url)
         }
         
-        // fetch next page
+        // fetch next page if collection view request the last item
+        // fetch manager don't fetch for the same page, so duplicate fetch call is safe
         if indexPath.row + 1 == self.fetchManager.photoCount() {
             _ = self.fetchManager.fetch(keyword: self.fetchManager.keyword)
         }
@@ -158,7 +165,8 @@ extension FlickrViewController: FlickrFetchManagerDelegate {
     
     func fetchManagerDidFetchCompleted(_: FlickrFetchManager) {
         DispatchQueue.main.async {
-            self.photoCollectionView.setContentOffset(.zero, animated: true)
+            self.photoCollectionView.setContentOffset(.zero, animated: false)
+            self.activityIndicator.stopAnimating()
             self.photoCollectionView.reloadData()
         }
     }
@@ -166,6 +174,7 @@ extension FlickrViewController: FlickrFetchManagerDelegate {
     
     func fetchManager(_: FlickrFetchManager, didFailWithError error: Error?) {
         print("fetch error: \(String(describing: error))")
+        self.activityIndicator.stopAnimating()
     }
     
 }
@@ -177,12 +186,13 @@ extension FlickrViewController: FlickrFetchManagerDelegate {
 extension FlickrViewController {
     
     func setupNotification() {
+        // to adjust keyword table view size
         NotificationCenter.default.addObserver(forName: NSNotification.Name.UIKeyboardDidChangeFrame, object: nil, queue: nil) { [weak self] (notification) in
             guard let frame = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
                 return
             }
             
-            self?.keyboardTableViewBottomConstraint.constant = frame.size.height
+            self?.keyboardTableViewBottomConstraint.constant = UIScreen.main.bounds.height - frame.origin.y
         }
     }
     
@@ -199,8 +209,11 @@ extension FlickrViewController {
     
     
     func search(_ keyword: String) {
+        self.searchBar.text = keyword
         self.searchBar.resignFirstResponder()
         self.keywordTableView.isHidden = true
+        self.activityIndicator.startAnimating()
+        
         self.searchHistoryManager.addKeyword(keyword)
         _ = self.fetchManager.fetch(keyword: keyword)
     }
