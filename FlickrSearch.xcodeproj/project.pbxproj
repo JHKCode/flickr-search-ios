@@ -13,6 +13,8 @@
 		1D1777261F19E7B400BDB9EB /* FlickrSearchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D1777251F19E7B400BDB9EB /* FlickrSearchTests.swift */; };
 		1D394A4E1F19E812001ECDD6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D394A4C1F19E812001ECDD6 /* AppDelegate.swift */; };
 		1D394A531F19E90D001ECDD6 /* FlickrViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D394A521F19E90D001ECDD6 /* FlickrViewController.swift */; };
+		1D394A551F19ED81001ECDD6 /* SearchKeywordCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D394A541F19ED81001ECDD6 /* SearchKeywordCell.swift */; };
+		1D394A571F19F18E001ECDD6 /* SearchHistoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D394A561F19F18E001ECDD6 /* SearchHistoryManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +38,8 @@
 		1D1777271F19E7B400BDB9EB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1D394A4C1F19E812001ECDD6 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = Sources/AppDelegate.swift; sourceTree = "<group>"; };
 		1D394A521F19E90D001ECDD6 /* FlickrViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FlickrViewController.swift; path = Sources/FlickrViewController.swift; sourceTree = "<group>"; };
+		1D394A541F19ED81001ECDD6 /* SearchKeywordCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SearchKeywordCell.swift; path = Sources/SearchKeywordCell.swift; sourceTree = "<group>"; };
+		1D394A561F19F18E001ECDD6 /* SearchHistoryManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SearchHistoryManager.swift; path = Sources/SearchHistoryManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +82,7 @@
 			isa = PBXGroup;
 			children = (
 				1D394A501F19E81A001ECDD6 /* Resources */,
+				1D394A4B1F19E803001ECDD6 /* Sources */,
 				1D17771C1F19E7B400BDB9EB /* Info.plist */,
 			);
 			path = FlickrSearch;
@@ -97,6 +102,8 @@
 			children = (
 				1D394A4C1F19E812001ECDD6 /* AppDelegate.swift */,
 				1D394A521F19E90D001ECDD6 /* FlickrViewController.swift */,
+				1D394A541F19ED81001ECDD6 /* SearchKeywordCell.swift */,
+				1D394A561F19F18E001ECDD6 /* SearchHistoryManager.swift */,
 			);
 			name = Sources;
 			sourceTree = "<group>";
@@ -104,7 +111,6 @@
 		1D394A501F19E81A001ECDD6 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				1D394A4B1F19E803001ECDD6 /* Sources */,
 				1D394A511F19E82F001ECDD6 /* Storyboards */,
 				1D1777171F19E7B400BDB9EB /* Assets.xcassets */,
 			);
@@ -224,8 +230,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1D394A571F19F18E001ECDD6 /* SearchHistoryManager.swift in Sources */,
 				1D394A4E1F19E812001ECDD6 /* AppDelegate.swift in Sources */,
 				1D394A531F19E90D001ECDD6 /* FlickrViewController.swift in Sources */,
+				1D394A551F19ED81001ECDD6 /* SearchKeywordCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
